@@ -1,0 +1,38 @@
+name: Matrix Build f40a374
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build for ${{ matrix.version }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        version: [14, 16, 18]
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: matrix-f40a374
+        run: echo "Building for Node.js version ${{ matrix.version }}"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.version }}
+
+      - name: Generate build artifact
+        run: |
+          echo "Build output for Node.js version ${{ matrix.version }}" > output-${{ matrix.version }}.txt
+          cat output-${{ matrix.version }}.txt
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-f40a374-v${{ matrix.version }}
+          path: output-${{ matrix.version }}.txt
